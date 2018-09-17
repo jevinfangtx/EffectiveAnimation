@@ -1,0 +1,35 @@
+https://blog.csdn.net/qq_35246620/article/details/66973794
+
+git status
+git add hit.txt
+git commit -m "text commit"
+git log
+
+git branch  查看分支 
+* master前的*表示当前处于该分支
+git branch a  创建一个a新分支
+git checkout a 切换到a分支
+git checkout -b a 创建分支a并切换到分支a
+git merge a 将分支a合并到当前分支，如果有冲突时不能合并，需要先解决冲突才能合并。
+git branch -d a 删除分支a，合并到主分支后才可以删除
+git branch -D a 强制删除分支a，不需要提前合并
+git tag v1.0
+git config --global user.name "名字"
+git config --global user.email "邮箱"
+
+ssh-keygen -t rsa 生成本地密钥和公钥 id_rsa和id_rsa.pub
+C:\Documents and Settings\username\\.ssh
+
+ssh -T git@github.com 测试git是不是配置成功
+
+代理配置
+export https_proxy=http://web-proxy.tencent.com:8080
+export no_proxy=*.oa.com
+
+
+git clone https://github.com/jevinfangtx/EffectiveAnimation.git
+拷贝文件到目录
+git add -A 或者 指定目录add
+git commit -m "commit log"
+git push origin master
+
