@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/c_flash_081" android:duration="66" />
+    <item android:drawable="@drawable/c_flash_082" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_083" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_084" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_085" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_086" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_087" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_088" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_089" android:duration="33" />
+
+    <item android:drawable="@drawable/c_flash_090" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_091" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_092" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_093" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_094" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_095" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_096" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_097" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_098" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_099" android:duration="33" />
+
+    <item android:drawable="@drawable/c_flash_100" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_101" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_102" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_103" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_104" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_105" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_106" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_107" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_108" android:duration="33" />
+    <item android:drawable="@drawable/c_flash_109" android:duration="33" />
+
+    <item android:drawable="@drawable/c_flash_081" android:duration="528" />
+
+
+</animation-list>
