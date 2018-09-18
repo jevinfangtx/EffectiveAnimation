@@ -336,7 +336,6 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         setFrame(0, true, false);
     }
 
-
     private void inflateChildElements(Context context) {
         long start = SystemClock.uptimeMillis();
         Resources resources = context.getResources();
