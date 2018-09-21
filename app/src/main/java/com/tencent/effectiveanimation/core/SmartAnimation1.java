@@ -1,4 +1,4 @@
-package com.tencent.effectiveanimation.AnimDemo;
+package com.tencent.effectiveanimation.core;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -10,19 +10,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.util.ArraySet;
 import android.util.Log;
 
 import com.tencent.effectiveanimation.R;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
-public class SmartAnimation extends DrawableContainer implements Runnable, Animatable {
+public class SmartAnimation1 extends DrawableContainer implements Runnable, Animatable {
     private AnimationState mAnimationState;
 
     /** The current frame, ranging from 0 to {@link #mAnimationState#getChildCount() - 1} */
@@ -142,7 +137,7 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         return set;
     }
 
-    public SmartAnimation() {
+    public SmartAnimation1() {
         this(null, null);
     }
 
@@ -380,7 +375,7 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         private int[] mDurations;
         private boolean mOneShot = false;
 
-        AnimationState(AnimationState orig, SmartAnimation owner, Resources res) {
+        AnimationState(AnimationState orig, SmartAnimation1 owner, Resources res) {
             super(orig, owner, res);
 
             if (orig != null) {
@@ -398,12 +393,12 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
 
         @Override
         public Drawable newDrawable() {
-            return new SmartAnimation(this, null);
+            return new SmartAnimation1(this, null);
         }
 
         @Override
         public Drawable newDrawable(Resources res) {
-            return new SmartAnimation(this, res);
+            return new SmartAnimation1(this, res);
         }
 
         public void addFrame(Drawable dr, int dur) {
@@ -431,7 +426,7 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         }
     }
 
-    private SmartAnimation(AnimationState state, Resources res) {
+    private SmartAnimation1(AnimationState state, Resources res) {
         final AnimationState as = new AnimationState(state, this, res);
         setConstantState(as);
         if (state != null) {

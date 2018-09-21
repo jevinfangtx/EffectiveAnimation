@@ -1,4 +1,4 @@
-package com.tencent.effectiveanimation.AnimDemo;
+package com.tencent.effectiveanimation.core;
 
 /*
  * Copyright (C) 2006 The Android Open Source Project
@@ -26,14 +26,12 @@ import android.graphics.PixelFormat;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.inputmethodservice.InputMethodService;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.LayoutDirection;
 import android.util.SparseArray;
-import android.view.View;
 
 /**
  * A helper class that contains several {@link Drawable}s and selects which one to use.
@@ -482,7 +480,7 @@ public class DrawableContainer extends Drawable implements Drawable.Callback {
         }
 
         if (index >= 0 && index < mDrawableContainerState.mNumChildren) {
-            final Drawable d = mDrawableContainerState.getChild(index);
+            final Drawable d = mDrawableContainerState.getChild(0);
             mCurrDrawable = d;
             mCurIndex = index;
             if (d != null) {
@@ -853,6 +851,13 @@ public class DrawableContainer extends Drawable implements Drawable.Callback {
             mCheckedConstantState = false;
 
             return pos;
+        }
+
+        public final void removeChild() {
+            Drawable[] newDrawables = new Drawable[mNumChildren - 1];
+            System.arraycopy(mSourceRes, 1, newDrawables, 0, mNumChildren - 1);
+            mNumChildren--;
+            mDrawables = newDrawables;
         }
 
         /**

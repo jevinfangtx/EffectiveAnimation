@@ -20,7 +20,7 @@ public class ImageCache {
     private static final String TAG = ImageCache.class.getSimpleName();
     private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 20; // 5M
 
-    private LruCache<String, BitmapDrawable> mMemoryCache;
+    private LruCache<Integer, BitmapDrawable> mMemoryCache;
 
     private ImageCacheParams mCacheParams;
     private Set<SoftReference<Bitmap>> mReusableBitmaps;
@@ -32,23 +32,26 @@ public class ImageCache {
     private void init(ImageCacheParams cacheParams) {
         mCacheParams = cacheParams;
         mReusableBitmaps = Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>());
-        mMemoryCache = new LruCache<String, BitmapDrawable>(mCacheParams.memCacheSize) {
+        mMemoryCache = new LruCache<Integer, BitmapDrawable>(mCacheParams.memCacheSize) {
 
             @Override
-            protected void entryRemoved(boolean evicted, String key,
+            protected void entryRemoved(boolean evicted, Integer key,
                                         BitmapDrawable oldValue, BitmapDrawable newValue) {
-                mReusableBitmaps.add(new SoftReference<Bitmap>(oldValue.getBitmap()));
+                // 先只缓存两个Bitmap
+                if (mReusableBitmaps.size() <= 2) {
+                    mReusableBitmaps.add(new SoftReference<Bitmap>(oldValue.getBitmap()));
+                }
             }
 
             @Override
-            protected int sizeOf(String key, BitmapDrawable value) {
+            protected int sizeOf(Integer key, BitmapDrawable value) {
                 final int bitmapSize = getBitmapSize(value) / 1024;
                 return bitmapSize == 0 ? 1 : bitmapSize;
             }
         };
     }
 
-    public void addBitmapToCache(String data, BitmapDrawable value) {
+    public void addBitmapToCache(Integer data, BitmapDrawable value) {
         if (data == null || value == null) {
             return;
         }
@@ -65,11 +68,11 @@ public class ImageCache {
      * @param data Unique identifier for which item to get
      * @return The bitmap drawable if found in cache, null otherwise
      */
-    public BitmapDrawable getBitmapFromMemCache(String data) {
+    public BitmapDrawable getBitmapFromMemCache(Integer data) {
         BitmapDrawable memValue = null;
 
         if (mMemoryCache != null) {
-            memValue = mMemoryCache.get(data);
+            memValue = mMemoryCache.remove(data);
         }
 
         if (BuildConfig.DEBUG && memValue != null) {
@@ -113,6 +116,13 @@ public class ImageCache {
         }
 
         return bitmap;
+    }
+
+    public int getCacheSize() {
+        if (mMemoryCache != null) {
+            return mMemoryCache.size();
+        }
+        return 0;
     }
 
 

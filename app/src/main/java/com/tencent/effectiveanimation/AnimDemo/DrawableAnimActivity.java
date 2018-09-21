@@ -4,13 +4,15 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
+import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 
 import com.tencent.effectiveanimation.R;
+import com.tencent.effectiveanimation.core.SmartAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +22,14 @@ public class DrawableAnimActivity extends AppCompatActivity {
 
     private static final String TAG = "datata";
     // 显示模式，1两个都显示，2只显示AnimationDrawable，3只显示SmartAnimation
-    public static final int SHOW_MODE = 1;
+    public static final int SHOW_MODE = 3;
     public static final boolean SET_CALLBACK = true;
     private ImageView mAnimView;
     private ImageView mSmartView;
     private AnimationDrawable mDrawableAnim;
     private SmartAnimation mSmartAnim;
+
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,8 +44,7 @@ public class DrawableAnimActivity extends AppCompatActivity {
         if (SHOW_MODE == 1 || SHOW_MODE == 3) {
             mSmartView = findViewById(R.id.smart_image);
             mSmartAnim = new SmartAnimation();
-            mSmartAnim.inflate(getResources(), this);
-            mSmartView.setImageDrawable(mSmartAnim);
+            mSmartAnim.inflate(this);
         }
     }
 
@@ -57,10 +60,16 @@ public class DrawableAnimActivity extends AppCompatActivity {
         }
 
         if (SHOW_MODE == 1 || SHOW_MODE == 3) {
-            if (SET_CALLBACK) {
-                mSmartAnim.setCallback(new DrawableCallback(mSmartAnim, mSmartView, "Smart"));
-            }
-            mSmartAnim.start();
+//            if (SET_CALLBACK) {
+//                mSmartAnim.setCallback(new DrawableCallback(mSmartAnim, mSmartView, "Smart"));
+//            }
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mSmartView.setImageDrawable(mSmartAnim);
+//                    mSmartAnim.start();
+                }
+            }, 4000);
         }
     }
 
