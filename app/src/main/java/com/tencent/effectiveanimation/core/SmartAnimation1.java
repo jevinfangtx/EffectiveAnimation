@@ -1,4 +1,4 @@
-package com.tencent.effectiveanimation.AnimDemo;
+package com.tencent.effectiveanimation.core;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,19 +11,16 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.util.ArraySet;
 import android.util.Log;
 
 import com.tencent.effectiveanimation.R;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
-public class SmartAnimation extends DrawableContainer implements Runnable, Animatable {
+public class SmartAnimation1 extends DrawableContainer implements Runnable, Animatable {
     private AnimationState mAnimationState;
+    private ImageFetcher mImageFetcher;
 
     /** The current frame, ranging from 0 to {@link #mAnimationState#getChildCount() - 1} */
     private int mCurFrame = 0;
@@ -142,7 +139,7 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         return set;
     }
 
-    public SmartAnimation() {
+    public SmartAnimation1() {
         this(null, null);
     }
 
@@ -195,7 +192,6 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
     @Override
     public void start() {
         mAnimating = true;
-
         if (!isRunning()) {
             // Start from 0th frame.
             setFrame(0, false, mAnimationState.getChildCount() > 1
@@ -309,6 +305,8 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         }
 
         setFrame(nextFrame, unschedule, !isLastFrame);
+        // set and then remove current
+
     }
 
     private void setFrame(int frame, boolean unschedule, boolean animate) {
@@ -329,28 +327,47 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         }
     }
 
-    public void inflate(Resources r, Context context) {
+    public void inflate(Context context) {
         mAnimationState.mOneShot = false;
-        updateDensity(r);
+        updateDensity(context.getResources());
         inflateChildElements(context);
         setFrame(0, true, false);
     }
 
-    private void inflateChildElements(Context context) {
-        long start = SystemClock.uptimeMillis();
+    private void inflateChildElements(final Context context) {
+        final long start = SystemClock.uptimeMillis();
         Resources resources = context.getResources();
-        for (int i = 0; i < mAnimRes.size(); i++) {
-            List<Integer> res = mAnimRes.get(i);
-            Bitmap bitmap = BitmapFactory.decodeResource(resources, res.get(0));
-            BitmapDrawable dr = new BitmapDrawable(resources, bitmap);
-//            Drawable dr = ContextCompat.getDrawable(context, res.get(0));
-            mAnimationState.addFrame(dr, res.get(1));
-            if (dr != null) {
-                dr.setCallback(this);
-            }
-        }
-        long total = SystemClock.uptimeMillis() - start;
-        Log.e("datata", "inflate time = " + total);
+//        for (int i = 0; i < mAnimRes.size(); i++) {
+//            List<Integer> res = mAnimRes.get(i);
+//            Bitmap bitmap = BitmapFactory.decodeResource(resources, res.get(0));
+//            BitmapDrawable dr = new BitmapDrawable(resources, bitmap);
+////            Drawable dr = ContextCompat.getDrawable(context, res.get(0));
+//            mAnimationState.addFrame(dr, res.get(1));
+//            if (dr != null) {
+//                dr.setCallback(this);
+//            }
+//        }
+
+//        Drawable dr = ContextCompat.getDrawable(context, R.drawable.c_anim_085);
+//        mAnimationState.addFrame(dr, 40);
+
+//        if (mImageFetcher == null) {
+//            mImageFetcher = new ImageFetcher(context.getResources());
+//        }
+//        mImageFetcher.addImageCache(0, R.drawable.c_anim_085, new ImageFetcher.Callback() {
+//            @Override
+//            public void callback(int frame, BitmapDrawable dr) {
+//                mAnimationState.addFrame(dr, 40);
+//                if (dr != null) {
+//                    dr.setCallback(SmartAnimation1.this);
+//                }
+//            }
+//        });
+
+//        Bitmap bitmap = ImageFetcher.decodeSampledBitmapFromResource(context.getResources(), R.drawable.c_anim_085, null);
+//        BitmapDrawable drawable = new BitmapDrawable(context.getResources(), bitmap);
+//        mAnimationState.addFrame(drawable, 40);
+//        long total = SystemClock.uptimeMillis() - start;
     }
 
     @Override
@@ -380,7 +397,7 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         private int[] mDurations;
         private boolean mOneShot = false;
 
-        AnimationState(AnimationState orig, SmartAnimation owner, Resources res) {
+        AnimationState(AnimationState orig, SmartAnimation1 owner, Resources res) {
             super(orig, owner, res);
 
             if (orig != null) {
@@ -398,12 +415,12 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
 
         @Override
         public Drawable newDrawable() {
-            return new SmartAnimation(this, null);
+            return new SmartAnimation1(this, null);
         }
 
         @Override
         public Drawable newDrawable(Resources res) {
-            return new SmartAnimation(this, res);
+            return new SmartAnimation1(this, res);
         }
 
         public void addFrame(Drawable dr, int dur) {
@@ -431,7 +448,7 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         }
     }
 
-    private SmartAnimation(AnimationState state, Resources res) {
+    private SmartAnimation1(AnimationState state, Resources res) {
         final AnimationState as = new AnimationState(state, this, res);
         setConstantState(as);
         if (state != null) {

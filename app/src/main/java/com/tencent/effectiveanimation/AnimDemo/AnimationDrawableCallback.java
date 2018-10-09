@@ -3,7 +3,8 @@ package com.tencent.effectiveanimation.AnimDemo;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Drawable.Callback;
-import android.util.Log;
+
+import com.tencent.effectiveanimation.core.SmartAnimation;
 
 public abstract class AnimationDrawableCallback implements Callback {
 
