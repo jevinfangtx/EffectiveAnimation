@@ -6,16 +6,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.tencent.effectiveanimation.BuildConfig;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ImageFetcher {
 
@@ -28,7 +24,6 @@ public class ImageFetcher {
     private List<TaskItem> mTaskItems;
     private Callback mCallback;
     private boolean mLooping;
-    private long start;
 
     public ImageFetcher(Resources resources, Callback callback) {
         mResources = resources;
@@ -39,45 +34,36 @@ public class ImageFetcher {
         mImageCache = new ImageCache(params);
     }
 
-    /**
-     * 增加缓存任务
-     * @param drawables 任务信息
-     * @param restart 第一个任务是否需要恢复动画队列
-     */
-    public void addCache(LinkedHashMap<Integer, Integer> drawables, boolean restart) {
+    public void addCache(int frame, int drawable, boolean restart) {
+        Log.e("datata", "resource = " + drawable);
         synchronized (mCacheLock) {
-            Iterator<Map.Entry<Integer, Integer>> iterator = drawables.entrySet().iterator();
-            boolean find;
-            boolean newRestart;
-            TaskItem item;
-            int index = 0;
-            while (iterator.hasNext()) {
-                Map.Entry<Integer, Integer> entry = iterator.next();
-                newRestart = restart && index == 0;
-                find = false;
-                for (int i = 0; i < mTaskItems.size(); i++) {
-                    item = mTaskItems.get(i);
-                    if (item.frame == entry.getKey()) {
-                        if (newRestart) {
-                            item.restart = newRestart;
-                        }
-                        find = true;
-                        break;
-                    }
-                }
-                if (!find) {
-                    TaskItem newItem = new TaskItem();
-                    newItem.frame = entry.getKey();
-                    newItem.resource = entry.getValue();
-                    newItem.restart = newRestart;
-                    mTaskItems.add(newItem);
-                }
-                index++;
+            TaskItem item = findTaskItem(frame);
+            if (item == null) {
+                item = new TaskItem();
+                item.frame = frame;
+                mTaskItems.add(item);
             }
-            if (!mLooping) {
-                mLooping = true;
-                runCache(mTaskItems.get(0));
+            if (item.resource <= 0) {
+                item.resource = drawable;
+                item.restart = restart;
+                Log.e("datata", "addCache = " + item);
             }
+        }
+    }
+
+    public void restartCache(int frame) {
+        if (!mLooping) {
+            mLooping = true;
+            TaskItem item = findTaskItem(frame);
+            if (item != null && item.resource > 0) {
+                runCache(item);
+            }
+        }
+    }
+
+    public void clearCache() {
+        if (mImageCache != null) {
+            mImageCache.clearCache();
         }
     }
 
@@ -88,54 +74,46 @@ public class ImageFetcher {
             }
             nextCache(item.frame);
         } else {
-            start = SystemClock.uptimeMillis();
             final BitmapWorkerTask task = new BitmapWorkerTask(item);
             task.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR, item.resource);
         }
     }
 
     private void nextCache(int frame) {
+        Log.e("datata", frame + "");
         synchronized (mCacheLock) {
             int index = -1;
+            TaskItem item;
             for (int i = 0; i < mTaskItems.size(); i++) {
-                TaskItem item = mTaskItems.get(i);
+                item = mTaskItems.get(i);
                 if (item.frame == frame) {
                     index = i;
+                    item.resource = 0;
                     break;
                 }
             }
-            TaskItem item;
-            if (index < 0) {
-                item = mTaskItems.size() > 0 ? mTaskItems.get(0) : null;
-            } else {
+            TaskItem nextItem = null;
+            if (index >= 0) {
                 int nextIndex = index + 1;
-                item = nextIndex < mTaskItems.size() ? mTaskItems.get(nextIndex) : null;
+                nextIndex = nextIndex < mTaskItems.size() ? nextIndex : 0;
+                nextItem = mTaskItems.get(nextIndex);
             }
-            removeCache(frame);
-            if (item != null) {
-                runCache(item);
+            Log.e("datata", "run = " + nextItem);
+            if (nextItem != null && nextItem.resource > 0) {
+                runCache(nextItem);
             } else {
                 mLooping = false;
             }
         }
     }
 
-    private void removeCache(int frame) {
-        synchronized (mCacheLock) {
-            Iterator<TaskItem> iterator = mTaskItems.iterator();
-            while (iterator.hasNext()) {
-                TaskItem item = iterator.next();
-                if (item.frame == frame) {
-                    iterator.remove();
-                }
+    private TaskItem findTaskItem(int frame) {
+        for (TaskItem item : mTaskItems) {
+            if (item.frame == frame) {
+                return item;
             }
         }
-    }
-
-    public void clearCache() {
-        if (mImageCache != null) {
-            mImageCache.clearCache();
-        }
+        return null;
     }
 
     public BitmapDrawable getImageCache(final Integer data) {
@@ -238,8 +216,6 @@ public class ImageFetcher {
                 find = true;
             }
         }
-        Log.e("datata", "find = " + find);
-
     }
 
     private static class TaskItem {

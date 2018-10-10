@@ -37,7 +37,7 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
     private boolean mMutated;
 
     private boolean mCaching;
-    private List<Long> mTimes = new ArrayList<>();
+//    private List<Long> mTimes = new ArrayList<>();
     private long start;
 
     public SmartAnimation() {
@@ -210,7 +210,7 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         if (!mAnimationState.mOneShot && nextFrame >= numFrames) {
             nextFrame = 0;
         }
-        addTime();
+//        addTime();
 //        showTimes();
 
         setFrame(nextFrame, unschedule, !isLastFrame);
@@ -220,8 +220,8 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
     }
 
     private void setFrame(int frame, boolean unschedule, boolean animate) {
-        mTimes.clear();
-        start = SystemClock.uptimeMillis();
+//        mTimes.clear();
+//        start = SystemClock.uptimeMillis();
         if (frame >= mDrawableItems.size()) {
             return;
         }
@@ -252,26 +252,10 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
                 mRunning = true;
                 scheduleSelf(this, SystemClock.uptimeMillis() + mAnimationState.mDurations[frame]);
             }
-            addTime();
+//            addTime();
         } else {
             cacheFrame(frame, true);
         }
-    }
-    private void addTime() {
-        mTimes.add(SystemClock.uptimeMillis() - start);
-        start = SystemClock.uptimeMillis();
-    }
-
-    private void showTimes() {
-        String msg = "";
-        for (int i = 0; i < mTimes.size(); i++) {
-            if (i == 0) {
-                msg += "" + i + " = " + mTimes.get(i);
-            } else {
-                msg += ", " + i + " = " + mTimes.get(i);
-            }
-        }
-        Log.e("datata", msg);
     }
 
     private void removeFrame(int frame) {
@@ -286,19 +270,19 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         if (!current) {
             frame = frame + 1;
         }
+        int startFrom = frame;
 
-        LinkedHashMap<Integer, Integer> drawables = new LinkedHashMap<>();
+        boolean restart;
         for (int i = 0; i < DEFAULT_CACHE_NUM; i++) {
             frame = frame + i;
             if (frame >= mDrawableItems.size()) {
                 frame = 0;
             }
-            drawables.put(frame, mDrawableItems.get(frame).resource);
+            restart = current && i == 0;
+            mImageFetcher.addCache(frame, mDrawableItems.get(frame).resource, restart);
         }
         mCaching = current;
-        if (drawables.size() > 0) {
-            mImageFetcher.addCache(drawables, current);
-        }
+        mImageFetcher.restartCache(startFrom);
     }
 
     private final ImageFetcher.Callback mFetcherCallback = new ImageFetcher.Callback() {
