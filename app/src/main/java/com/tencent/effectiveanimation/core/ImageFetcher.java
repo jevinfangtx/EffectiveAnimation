@@ -34,6 +34,17 @@ public class ImageFetcher {
         mImageCache = new ImageCache(params);
     }
 
+    public void addCacheList(int[] drawables, int number, boolean restart) {
+        int total = number * 2;
+        boolean newRestart;
+        for (int i = 0; i < total && i < drawables.length; i=i+2) {
+            int frame = drawables[i];
+            int drawable = drawables[i+1];
+            newRestart = restart && i == 0;
+            addCache(frame, drawable, newRestart);
+        }
+    }
+
     public void addCache(int frame, int drawable, boolean restart) {
         Log.e("datata", "resource = " + drawable);
         synchronized (mCacheLock) {

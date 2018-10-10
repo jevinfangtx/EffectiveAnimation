@@ -16,6 +16,7 @@ import com.tencent.effectiveanimation.R;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SmartAnimation extends DrawableContainer implements Runnable, Animatable {
     // default cache image number
@@ -24,6 +25,7 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
     private AnimationState mAnimationState;
     private ImageFetcher mImageFetcher;
     private List<DrawableItem> mDrawableItems;
+    private int[] mCacheDrawable;
 
     /** The current frame, ranging from 0 to {@link #mAnimationState#getChildCount() - 1} */
     private int mCurFrame = 0;
@@ -270,19 +272,20 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
         if (!current) {
             frame = frame + 1;
         }
-        int startFrom = frame;
 
-        boolean restart;
+        if (mCacheDrawable == null) {
+            mCacheDrawable = new int[DEFAULT_CACHE_NUM * 2];
+        }
         for (int i = 0; i < DEFAULT_CACHE_NUM; i++) {
             frame = frame + i;
             if (frame >= mDrawableItems.size()) {
                 frame = 0;
             }
-            restart = current && i == 0;
-            mImageFetcher.addCache(frame, mDrawableItems.get(frame).resource, restart);
+            mCacheDrawable[i] = frame;
+            mCacheDrawable[i+1] = mDrawableItems.get(frame).resource;
         }
         mCaching = current;
-        mImageFetcher.restartCache(startFrom);
+        mImageFetcher.addCacheList(mCacheDrawable, DEFAULT_CACHE_NUM, current);
     }
 
     private final ImageFetcher.Callback mFetcherCallback = new ImageFetcher.Callback() {
