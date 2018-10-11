@@ -35,43 +35,46 @@ public class ImageFetcher {
     }
 
     public void addCacheList(int[] drawables, int number, boolean restart) {
-        int total = number * 2;
-        boolean newRestart;
-        for (int i = 0; i < total && i < drawables.length; i=i+2) {
-            int frame = drawables[i];
-            int drawable = drawables[i+1];
-            newRestart = restart && i == 0;
-            addCache(frame, drawable, newRestart);
+        synchronized (mCacheLock) {
+            int total = number * 2;
+            TaskItem startItem = null;
+            boolean newRestart;
+            for (int i = 0; i < total && i < drawables.length; i = i + 2) {
+                int frame = drawables[i];
+                int drawable = drawables[i + 1];
+                newRestart = restart && i == 0;
+                if (i == 0) {
+                    startItem = addCache(frame, drawable, newRestart);
+                } else {
+                    addCache(frame, drawable, newRestart);
+                }
+            }
+            if (startItem != null) {
+                runCache(startItem);
+            }
         }
     }
 
-    public void addCache(int frame, int drawable, boolean restart) {
+    private TaskItem addCache(int frame, int drawable, boolean restart) {
         Log.e("datata", "resource = " + drawable);
-        synchronized (mCacheLock) {
-            TaskItem item = findTaskItem(frame);
-            if (item == null) {
-                item = new TaskItem();
-                item.frame = frame;
-                mTaskItems.add(item);
+        TaskItem item = findTaskItem(frame);
+        if (item == null) {
+            item = new TaskItem();
+            item.frame = frame;
+            item.resource = drawable;
+            item.restart = restart;
+            mTaskItems.add(item);
+        } else {
+            if (restart) {
+                item.restart = restart;
             }
             if (item.resource <= 0) {
                 item.resource = drawable;
-                item.restart = restart;
-                Log.e("datata", "addCache = " + item);
             }
         }
+        return item;
     }
-
-    public void restartCache(int frame) {
-        if (!mLooping) {
-            mLooping = true;
-            TaskItem item = findTaskItem(frame);
-            if (item != null && item.resource > 0) {
-                runCache(item);
-            }
-        }
-    }
-
+    
     public void clearCache() {
         if (mImageCache != null) {
             mImageCache.clearCache();
