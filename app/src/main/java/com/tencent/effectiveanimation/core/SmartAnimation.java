@@ -263,8 +263,9 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
     private void removeFrame(int frame) {
         mAnimationState.removeFrame(frame);
         DrawableItem item = mDrawableItems.get(frame);
+//        Log.e("datata",  "resource = " + item.resource);
         if (item != null) {
-            mImageFetcher.removeImageCache(item.resource);
+            mImageFetcher.removeImageCache(frame, item.resource);
         }
     }
 
@@ -281,8 +282,8 @@ public class SmartAnimation extends DrawableContainer implements Runnable, Anima
             if (frame >= mDrawableItems.size()) {
                 frame = 0;
             }
-            mCacheDrawable[i] = frame;
-            mCacheDrawable[i+1] = mDrawableItems.get(frame).resource;
+            mCacheDrawable[i*2] = frame;
+            mCacheDrawable[i*2 + 1] = mDrawableItems.get(frame).resource;
         }
         mCaching = current;
         mImageFetcher.addCacheList(mCacheDrawable, DEFAULT_CACHE_NUM, current);
