@@ -48,14 +48,8 @@ public class ImageFetcher {
                     growTaskItems();
                 }
                 newRestart = restart && i == 0;
-                item = mTaskItems[drawables[i]];
-                if (getImageCache(drawables[i + 1]) == null) {
-                    addCache(drawables[i], drawables[i + 1], newRestart);
-                    if (startFrom <= 0) {
-                        startFrom = drawables[i];
-                    }
-                } else {
-                    item.restart = restart;
+                if (addCache(drawables[i], drawables[i + 1], newRestart) && startFrom < 0) {
+                    startFrom = drawables[i];
                 }
             }
             if (!mLooping) {
@@ -65,8 +59,12 @@ public class ImageFetcher {
         }
     }
 
-    private TaskItem addCache(int frame, int drawable, boolean restart) {
+    private boolean addCache(int frame, int drawable, boolean restart) {
         TaskItem item = mTaskItems[frame];
+        if (getImageCache(drawable) != null) {
+            item.restart = restart;
+            return false;
+        }
         if (item == null) {
             item = new TaskItem();
             item.resource = drawable;
@@ -83,7 +81,7 @@ public class ImageFetcher {
         if ((frame + 1) > mNumChildren) {
             mNumChildren = frame + 1;
         }
-        return item;
+        return true;
     }
     
     public void clearCache() {
@@ -215,7 +213,7 @@ public class ImageFetcher {
         // Calculate inSampleSize
         options.inSampleSize = 1;
 
-        // If we're running on Honeycomb or newer, try to use inBitmap
+        // If we're running on Honeycomb or newer, try to use inBitmap0000000000000
         if (Utils.hasHoneycomb()) {
             addInBitmapOptions(options, cache);
         }
