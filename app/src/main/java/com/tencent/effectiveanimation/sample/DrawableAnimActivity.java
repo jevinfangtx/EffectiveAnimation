@@ -1,19 +1,15 @@
-package com.tencent.effectiveanimation.AnimDemo;
+package com.tencent.effectiveanimation.sample;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.tencent.effectiveanimation.R;
-import com.tencent.effectiveanimation.core.ImageFetcher;
 import com.tencent.effectiveanimation.core.SmartAnimation;
-import com.tencent.effectiveanimation.core.SmartAnimation1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +25,7 @@ public class DrawableAnimActivity extends AppCompatActivity {
     private ImageView mSmartView;
     private AnimationDrawable mDrawableAnim;
     private SmartAnimation mSmartAnim;
-
-    private ImageFetcher mImageFetcher;
     private DrawableProvider mProvider;
-
-    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,19 +57,7 @@ public class DrawableAnimActivity extends AppCompatActivity {
         }
 
         if (SHOW_MODE == 1 || SHOW_MODE == 3) {
-//            if (SET_CALLBACK) {
-//                mSmartAnim.setCallback(new DrawableCallback(mSmartAnim, mSmartView, "Smart"));
-//            }
             mSmartAnim.start();
-
-//            mImageFetcher.addImageCache(R.drawable.c_anim_085, new ImageFetcher.Callback() {
-//                @Override
-//                public void callback(BitmapDrawable dr) {
-//                    mSmartAnim.addFrame(dr, 40);
-//                    mSmartView.setImageDrawable(mSmartAnim);
-//                    mSmartAnim.start();
-//                }
-//            });
         }
     }
 

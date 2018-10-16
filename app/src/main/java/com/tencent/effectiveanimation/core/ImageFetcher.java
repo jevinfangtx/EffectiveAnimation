@@ -104,7 +104,7 @@ public class ImageFetcher {
             nextCache(frame);
         } else {
             final BitmapWorkerTask task = new BitmapWorkerTask(item);
-            task.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR, item.resource);
+            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.resource);
         }
     }
 

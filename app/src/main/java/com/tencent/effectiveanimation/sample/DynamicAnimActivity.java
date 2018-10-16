@@ -1,4 +1,4 @@
-package com.tencent.effectiveanimation.AnimDemo;
+package com.tencent.effectiveanimation.sample;
 
 import android.support.v7.app.AppCompatActivity;
 

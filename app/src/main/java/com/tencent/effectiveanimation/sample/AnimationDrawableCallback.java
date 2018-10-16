@@ -1,4 +1,4 @@
-package com.tencent.effectiveanimation.AnimDemo;
+package com.tencent.effectiveanimation.sample;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;

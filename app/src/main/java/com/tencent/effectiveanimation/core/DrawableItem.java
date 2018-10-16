@@ -1,8 +1,8 @@
 package com.tencent.effectiveanimation.core;
 
 public class DrawableItem {
-    int resource;
-    int duration;
+    public int resource;
+    public int duration;
 
     public DrawableItem(int resource, int duration) {
         this.resource = resource;

@@ -197,7 +197,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class AsyncTask<Params, Progress, Result> {
     private static final String LOG_TAG = "AsyncTask";
 
-    private static final int CORE_POOL_SIZE = 2;
+    private static final int CORE_POOL_SIZE = 1;
     private static final int MAXIMUM_POOL_SIZE = 4;
     private static final int KEEP_ALIVE = 1;
 

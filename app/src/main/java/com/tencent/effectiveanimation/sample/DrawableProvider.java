@@ -1,4 +1,4 @@
-package com.tencent.effectiveanimation.AnimDemo;
+package com.tencent.effectiveanimation.sample;
 
 import com.tencent.effectiveanimation.R;
 import com.tencent.effectiveanimation.core.DrawableItem;
@@ -10,6 +10,7 @@ public class DrawableProvider {
 
     public final List<DrawableItem> mFlashItems = new ArrayList<DrawableItem>();
     public final List<DrawableItem> mAnimItems = new ArrayList<DrawableItem>();
+    public final List<DrawableItem> mTouXiang = new ArrayList<DrawableItem>();
 
     public DrawableProvider() {
         mFlashItems.add(create(R.drawable.c_flash_081, 66));
@@ -104,6 +105,24 @@ public class DrawableProvider {
         mAnimItems.add(create(R.drawable.c_anim_116, 27));
         mAnimItems.add(create(R.drawable.c_anim_117, 27));
         mAnimItems.add(create(R.drawable.c_anim_118, 27));
+
+        mTouXiang.add(create(R.drawable.touxiang_00030, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00031, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00032, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00033, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00034, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00035, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00036, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00037, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00038, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00039, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00040, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00041, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00042, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00043, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00044, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00045, 50));
+        mTouXiang.add(create(R.drawable.touxiang_00046, 50));
     }
     
     public static DrawableItem create(int resource, int duration) {
